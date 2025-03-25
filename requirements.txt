@@ -1,0 +1,12 @@
+email
+pytesseract
+pdfplumber
+Pillow
+transformers
+scikit-learn
+fastapi
+uvicorn
+jinja2
+torch
+Flask
+python-multipart
