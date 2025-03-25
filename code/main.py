@@ -125,9 +125,7 @@ def classify_email_local(full_text, labels):
 
 processed_emails = set()
 # Initialize Hugging Face inference client
-client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
-#client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
-
+client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="")
 
 
 def classify_email_with_llama(email_body: str):
@@ -144,10 +142,10 @@ def classify_email_with_llama(email_body: str):
         "You are an AI Loan Agent that classifies emails into categories and sub-categories "
         "based on the given classification table. "
         "The main categories include 'Adjustment, 'Money Movement Inbound', 'Funding Request','Loan Modification', 'Closing Notice', 'Fee Payment', 'Money Movement - Outbound', 'AU Transfer', etc. "
-        "with sub-categories under each.    Reallocation Fees', 'Amendment Fees', 'Reallocation Principal', 'Cashless Roll', 'Decrease', 'Increase', 'Ongoing Fee', 'Letter of Credit Fee', 'Principal', 'Interest', 'Principal + Interest', 'Principal + Interest + Fee', 'Timebound', 'Foreign Currency'"
-        "provide confidence score, detect for multiple requests, phishing email, duplicate email, emotion score"
+        "with sub-categories under each. 'Reallocation Fees', 'Amendment Fees', 'Reallocation Principal', 'Cashless Roll', 'Decrease', 'Increase', 'Ongoing Fee', 'Letter of Credit Fee', 'Principal', 'Interest', 'Principal + Interest', 'Principal + Interest + Fee', 'Timebound', 'Foreign Currency'"
         f"Classify this email: {email_body}"
-        "Output format first json in array each json need to have Category,Sub-Category,Confidence-score,Duplicate-Email, multiple-requests, phishing-email, emotion-score, intent and reasoning for classification in very short and crisp description"
+        "provide confidence score, , emotion score and detect for multiple requests, phishing email, duplicate email"
+        "Output format first json in array and json need to have Category,Sub-Category,Confidence-score,Duplicate-Email, multiple-requests, phishing-email, emotion-score, intent and reasoning for classification in very short and crisp description"
     )
 
     # Call the model
@@ -186,6 +184,7 @@ def classify_email_with_llama(email_body: str):
         "duplicate": duplicate_email,
         "phishingEmail": first_json["phishing-email"],
         "emotionScore": first_json["emotion-score"],
+        "reasoning": first_json["reasoning"],
     }
     return responseContent
     # lines = response.split("\n")
