@@ -125,8 +125,8 @@ def classify_email_local(full_text, labels):
 
 processed_emails = set()
 # Initialize Hugging Face inference client
-client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
-#client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
+client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="hf_YjkfFloklhljipupfuuMVYPPoKZTjlhkljgkgVL")
+
 
 
 
