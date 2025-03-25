@@ -1,0 +1,378 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Classifier</title>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    -->
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+         body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      background: linear-gradient(to top right, #D20A11, #B00000);
+
+      color: white;
+    }
+
+    .container {
+      background: white;
+      color: #333;
+      border-radius: 10px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      width: 85%;
+      padding: 20px;
+      text-align: center;
+         max-width: 1200px;  /* Set a max width */
+    margin: 30px auto;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: black;
+    }
+
+    .upload-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 15px 0;
+        padding-left: 20px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    label {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    label:hover {
+      background-color: #45a049;
+    }
+
+    p.file-name {
+      margin-left: 20px;
+      font-style: italic;
+      color: #333;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .results {
+      margin-top: 20px;
+      padding: 15px;
+      background: lightgoldenrodyellow;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .results h3 {
+      color: #444;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      padding: 5px;
+      font-size: 16px;
+    }
+    .tabs {
+    display: flex;
+    background-color: #f5f0eb; /* Light beige background */
+    padding: 10px;
+    border-radius: 10px;
+    width: 70%;
+}
+
+.tab {
+     flex: 1;
+    background: none;
+    border: none;
+    padding: 12px 16px;
+    font-size: 20px;
+    font-weight: normal;
+    color: #3d2c1e; /* Dark brown text */
+    cursor: pointer;
+}
+
+.tab.active {
+    background: white;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    text-decoration: underline;
+}
+
+    .tab:hover {
+     background-color: #e0e0e0;
+         text-decoration: underline;
+    }
+
+
+
+    .content {
+      display: none;
+      background: white;
+      color: #333; /* Dark text color */
+      border: 1px solid #ccc;
+      border-radius: 0 0 5px 5px; /* Rounded corners for content */
+      padding: 20px;
+      width: 70%;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .content.active {
+      display: block;
+    }
+    .results-table {
+  width: 50%;
+  border-collapse: collapse;
+  color: black;
+  margin: auto;
+}
+
+.results-table th {
+  text-align: left;
+  padding: 8px;
+  background-color:  red;
+}
+
+.results-table td {
+  text-align: left;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+.button-container {
+  display: flex;
+  justify-content: center; /* Center align the button */
+  margin-top: 20px;
+
+}
+.button-class {
+  padding: 12px 25px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  background-color: red; /* Sets the button color to red */
+  color: white; /* White text for contrast */
+  text-decoration: none;
+}
+.button-class:hover {
+  background-color: #a00;
+    text-decoration: underline; /* Darker red on hover */
+}
+
+
+    </style>
+</head>
+
+<body>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="emailTab">Email Classification</div>
+    <div class="tab" data-tab="dashboardTab">Dashboard</div>
+  </div>
+
+  <div class="content active" id="emailTab">
+    <h1>Email Gate Keeper</h1>
+    <form id="uploadForm">
+        <p align="left"><b>Upload a file for email classification</b></p>
+      <div class="upload-row">
+        <input type="file" name="email_file" id="email_file" required>
+        <label class="button-class" for="email_file">Upload File</label>
+        <p id="fileName" class="file-name">No file chosen</p>
+      </div>
+
+            <button class="button-class" type="submit"><i class="fas fa-upload"></i> Analyze</button>
+
+    </form>
+
+    <div id="results" class="results" style="display: none;">
+      <!-- Results will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <div class="content" id="dashboardTab">
+    <h2>Dashboard</h2>
+    <p>View the results and detailed statistics of your email classifications here.</p>
+  </div>
+
+  <script>
+
+    const fileInput = document.getElementById('email_file');
+    const fileNameDisplay = document.getElementById('fileName');
+    const uploadForm = document.getElementById('uploadForm');
+    const resultsDiv = document.getElementById('results');
+
+    // Display the selected file name
+    fileInput.addEventListener('change', function () {
+      if (fileInput.files.length > 0) {
+        fileNameDisplay.textContent = `Selected file: ${fileInput.files[0].name}`;
+      } else {
+        fileNameDisplay.textContent = 'No file chosen';
+      }
+    });
+
+let activeTab = "emailTab"; // Default to 'emailTab'
+
+function setActiveTab(tabId) {
+    activeTab = tabId;
+  sessionStorage.setItem("activeTab", tabId);
+}
+    document.addEventListener("DOMContentLoaded", function () {
+    let activeTab = sessionStorage.getItem("activeTab");
+
+    if (activeTab) {
+        switchTab(activeTab);
+    }
+
+    // Add click event listeners to all tab buttons
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", function () {
+
+            let tabId = this.getAttribute("data-tab");
+            sessionStorage.setItem("activeTab", tabId);
+            switchTab(tabId);
+        });
+    });
+});
+
+// Function to switch tabs
+function switchTab(tabId) {
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.remove("active");
+    });
+
+    document.querySelectorAll(".content").forEach(content => {
+        content.style.display = "none";
+    });
+
+    let selectedTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+    let selectedContent = document.getElementById(tabId);
+    if (selectedTab && selectedContent) {
+        selectedTab.classList.add("active");
+        selectedContent.style.display = "block";
+    }
+}
+
+// Call this function after AJAX to restore the active tab
+function applyTabState() {
+    let activeTab = sessionStorage.getItem("activeTab");
+    if (activeTab) {
+        switchTab(activeTab);
+    }
+}
+
+    // Handle form submission with AJAX
+    uploadForm.addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevent page refresh
+    const formData = new FormData(uploadForm); // Create FormData object
+   fetch('/classify', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => response.json()) // Parse server response as JSON
+        .then((data) => {
+
+          resultsDiv.style.display = 'block';
+          // Construct table rows for extracted fields
+          const extractedFieldsRows = Object.entries(data.fields)
+            .map(([key, value]) => `<tr><td>${key}</td><td>${value}</td></tr>`)
+            .join("");// Show results div
+            // Construct table rows for multi requests detected
+            const multiRequestsRows = data.requests
+              .map(
+                (req) =>
+                  `<tr>
+                    <td>${req[1]}</td> <!-- Request Type -->
+                    <!--<td>${req[2]}</td>  Request Level -->
+                   </tr>`
+              )
+  .join("");
+          resultsDiv.innerHTML = `
+            <h2>Classified Results</h2>
+            <h3><p><strong>Request Type:</strong> ${data.requestType}</p>
+             <p><strong>Sub-Request Type:</strong> ${data.subRequestType}
+            </p></h3>
+            <h3>Confidence Score: ${data.score}</h3>
+            <!--<h3>Extracted Fields:</h3>
+                <table class="results-table">
+                  <thead>
+                    <tr>
+                      <th>Field Name</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${extractedFieldsRows}
+                  </tbody>
+                </table>-->
+                <!--<ul>
+              ${Object.entries(data.fields)
+                .map(([key, value]) => `<li>${key}: ${value}</li>`)
+                .join('')}
+            </ul>-->
+            <h3><p><strong>Emotion Score:</strong> ${data.emotionScore}</p></h3>
+            <h3>Multiple Requests Detected : ${data.multipleRequests}</h3>
+
+             <h3><p><strong>Primary Intent:</strong> ${data.primary}</p></h3>
+             <h3><p><strong>Duplicate Email:</strong> ${data.duplicate}</p></h3>
+             <h3><p><strong>Is Phishing Email:</strong> ${data.phishingEmail}</p></h3>
+
+          `;
+           console.log("Active Tab after Submit:", activeTab);
+           // Ensure active tab is reapplied after AJAX call
+      // Reapply active tab state after AJAX update
+     // Delay restoration to ensure new elements are available
+    setTimeout(() => {
+        applyTabState();
+    }, 100);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          resultsDiv.style.display = 'block';
+          resultsDiv.innerHTML = `<p style="color: red;">An error occurred while processing the file.</p>`;
+        });
+    });
+
+  </script>
+
+</body>
+</html>
