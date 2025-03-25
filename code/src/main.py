@@ -85,8 +85,8 @@ async def classify_email_view(request: Request, email_file: UploadFile):
 
 def classify_email_local(full_text, labels):
     # Classification and Field Extraction
-    print('full_text ',full_text)
-    print("Email Body ", full_text)
+    # print('full_text ',full_text)
+    # print("Email Body ", full_text)
 
     print(repr(full_text))
     email_body = full_text.replace("\r\n", "\n").replace("\r", "\n")
@@ -125,7 +125,9 @@ def classify_email_local(full_text, labels):
 
 processed_emails = set()
 # Initialize Hugging Face inference client
-client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="")
+client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
+#client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
+
 
 
 def classify_email_with_llama(email_body: str):
@@ -154,17 +156,29 @@ def classify_email_with_llama(email_body: str):
     # response = client.text_generation(prompt, max_new_tokens=100)
     response = client.text_generation(prompt, max_new_tokens=emailBodyLength)
     print("response..Actual..  ", response)
+    #cleaned_json_string = re.sub(r"(^```json|```$|^\.*|\.*$)", "", response.strip())
     cleaned_json_string = re.sub(r"^\.*|\.*$", "", response.strip())
+    cleaned_json_string = re.sub(r"```json|```", "", cleaned_json_string).strip()
     cleaned_json_string = cleaned_json_string.replace('False', 'false').replace('True', 'true')
     print("cleaned_json_string --  ",cleaned_json_string)
     # Parse JSON
 
     data = json.loads(cleaned_json_string, strict=False)
+    print("data....  ", data)
+    first_json = ""
+    if isinstance(data, list):
+        first_json = data[0]
+    else:
+        if re.search(r"emails", cleaned_json_string):
+            first_json = data["emails"][0]
+        else:
+            first_json = data
+
 
     # Get the first JSON object
-    first_json = data[0]
 
-    print("response....  ",data)
+
+    print("first_json....  ",first_json)
 
     category = first_json["Category"]
     sub_category = first_json["Sub-Category"]
