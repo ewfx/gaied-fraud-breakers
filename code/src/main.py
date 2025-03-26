@@ -87,8 +87,8 @@ async def classify_email_view(request: Request, email_file: UploadFile):
             attachment_texts.append(extract_text_from_image(content))
 
     full_text = body + "\n".join(attachment_texts)
-    return classify_email_local(full_text, LABELS)
-    #return classify_email_with_llama(full_text)
+    #return classify_email_local(full_text, LABELS)
+    return classify_email_with_llama(full_text)
 
 def classify_email_local(full_text, labels):
     # Classification and Field Extraction
@@ -155,7 +155,7 @@ field_names = [
 
 processed_emails = set()
 # Initialize Hugging Face inference client
-client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
+client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="")
 #client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
 
 
@@ -196,11 +196,16 @@ def classify_email_with_llama(email_body: str):
     data = json.loads(cleaned_json_string, strict=False)
     print("data....  ", data)
     first_json = ""
+    multiReq = False
     if isinstance(data, list):
         first_json = data[0]
+        if len(data) > 1:
+            multiReq = True
     else:
         if re.search(r"emails", cleaned_json_string):
             first_json = data["emails"][0]
+            if len(data["emails"]) > 1:
+                multiReq = True
         else:
             first_json = data
 
@@ -214,7 +219,11 @@ def classify_email_with_llama(email_body: str):
     sub_category = first_json["Sub-Category"]
     confidence = first_json["Confidence-score"]
     duplicate_email = first_json["Duplicate-Email"]
-    multiple_requests = first_json["multiple-requests"]
+    if multiReq:
+        multiple_requests = "true"
+    else:
+        multiple_requests = "false"
+
     intent = first_json["intent"]
     responseContent = {
         # "request": request,
