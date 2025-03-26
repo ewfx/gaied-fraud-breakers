@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Request</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+<div>
+      <h2>Request & Sub Request Types</h2>
+
+    {% if request_types %}
+    <table class="results-table">
+        <thead>
+            <tr>
+                <th>Request Type</th>
+                <th>Sub Request Types</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in request_types %}
+            <tr>
+                <td rowspan="{{ request.subRequestType|length }}">{{ request.requestType }}</td>
+                <td>{{ request.subRequestType[0] }}</td>
+
+            </tr>
+             {% for sub_request in request.subRequestType[1:] %}
+            <tr class="sub-requests">
+                <td>{{ sub_request }}</td>
+            </tr>
+            {% endfor %}
+         {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No request types found.</p>
+    {% endif %}
+</div>
+
+
+</body>
+</html>

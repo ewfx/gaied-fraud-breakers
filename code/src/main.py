@@ -26,6 +26,13 @@ import re
 
 from transformers import pipeline
 from huggingface_hub import InferenceClient
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import io
+from fastapi.responses import StreamingResponse
 import hashlib
 
 app = FastAPI()
@@ -80,8 +87,8 @@ async def classify_email_view(request: Request, email_file: UploadFile):
             attachment_texts.append(extract_text_from_image(content))
 
     full_text = body + "\n".join(attachment_texts)
-    #return classify_email_local(full_text, LABELS)
-    return classify_email_with_llama(full_text)
+    return classify_email_local(full_text, LABELS)
+    #return classify_email_with_llama(full_text)
 
 def classify_email_local(full_text, labels):
     # Classification and Field Extraction
@@ -103,10 +110,10 @@ def classify_email_local(full_text, labels):
     # Display results
     for label, indScore in zip(result['labels'], result['scores']):
         print(f"{label}: {indScore:.4f}")
-    fields = extract_fields(full_text, ["deal_name", "monetary_amount", "expiration_date"])
+    fields = extract_fields(full_text, field_names)
 
     #requests, primary = detect_multiple_requests(full_text, LABELS)
-    print("\n")
+    print("fields : ",fields)
     # print("requests--", requests)
     # print("primary--", primary)
 
@@ -122,11 +129,34 @@ def classify_email_local(full_text, labels):
         "duplicate": "False"
     }
     return responseContent
+field_names = [
+    "deal_name",
+    "monetary_amount",
+    "expiration_date",
+    "borrower_name",
+    "loan_amount",
+    "interest_rate",
+    "loan_term",
+    "maturity_date",
+    "collateral",
+    "lender_name",
+    "loan_type",
+    "closing_date",
+    "payment_schedule",
+    "guarantor",
+    "loan_purpose",
+    "fees",
+    "covenants",
+    "amortization_period",
+    "escrow_requirements",
+    "prepayment_penalty",
+    "loan_status"
+]
 
 processed_emails = set()
 # Initialize Hugging Face inference client
-client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="hf_YjkfFloklhljipupfuuMVYPPoKZTjlhkljgkgVL")
-
+client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
+#client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
 
 
 
@@ -308,11 +338,51 @@ def extract_text_from_image(content):
     img = Image.open(BytesIO(content))
     return pytesseract.image_to_string(img)
 
+# field_patterns = {
+#     "deal_name": r"Deal\s*Name\s*:\s*(.+)",
+#     "monetary_amount": r"\$\s?[\d,]+(?:\.\d{2})?",
+#     "expiration_date": r"\b(?:\d{1,2}/\d{1,2}/\d{2,4})\b"
+# }
+
 field_patterns = {
-    "deal_name": r"Deal\s*Name\s*:\s*(.+)",
-    "monetary_amount": r"\$\s?[\d,]+(?:\.\d{2})?",
-    "expiration_date": r"\b(?:\d{1,2}/\d{1,2}/\d{2,4})\b"
+    "deal_name": r"(?i)Deal\s*Name\s*:\s*(.+)",
+    "monetary_amount": r"(?i)\$\s?[\d,]+(?:\.\d{2})?",
+    "expiration_date": r"(?i)\b(?:\d{1,2}/\d{1,2}/\d{2,4})\b",
+    "borrower_name": r"(?i)Borrower\s*Name\s*:\s*(.+)",
+    "loan_amount": r"(?i)Loan\s*Amount\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "interest_rate": r"(?i)Interest\s*Rate\s*:\s*(\d+\.?\d*)\%",
+    "loan_term": r"(?i)Loan\s*Term\s*:\s*(\d+\s*(?:years?|months?))",
+    "maturity_date": r"(?i)Maturity\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
+    "collateral": r"(?i)Collateral\s*:\s*(.+)",
+    "lender_name": r"(?i)Lender\s*Name\s*:\s*(.+)",
+    "loan_type": r"(?i)Loan\s*Type\s*:\s*(.+)",
+    "closing_date": r"(?i)Closing\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
+    "payment_schedule": r"(?i)Payment\s*Schedule\s*:\s*(.+)",
+    "guarantor": r"(?i)Guarantor\s*:\s*(.+)",
+    "loan_purpose": r"(?i)Loan\s*Purpose\s*:\s*(.+)",
+    "fees": r"(?i)Fees\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "covenants": r"(?i)Covenants\s*:\s*(.+)",
+    "amortization_period": r"(?i)Amortization\s*Period\s*:\s*(\d+\s*(?:years?|months?))",
+    "escrow_requirements": r"(?i)Escrow\s*Requirements\s*:\s*(.+)",
+    "prepayment_penalty": r"(?i)Prepayment\s*Penalty\s*:\s*(.+)",
+    "loan_status": r"(?i)Loan\s*Status\s*:\s*(.+)",
+    "loan_number": r"(?i)Loan\s*Number\s*:\s*(\w+)",  # Alphanumeric loan number
+    "origination_date": r"(?i)Origination\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
+    "repayment_type": r"(?i)Repayment\s*Type\s*:\s*(.+)",  # Fixed, variable, interest-only, etc.
+    "disbursement_date": r"(?i)Disbursement\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
+    "funding_source": r"(?i)Funding\s*Source\s*:\s*(.+)",  # Bank, private lender, etc.
+    "dscr": r"(?i)DSCR\s*\(Debt Service Coverage Ratio\)\s*:\s*(\d+\.?\d*)",
+    "ltv": r"(?i)LTV\s*\(Loan-to-Value\)\s*:\s*(\d+\.?\d*)\%",
+    "debt_yield": r"(?i)Debt\s*Yield\s*:\s*(\d+\.?\d*)\%",
+    "principal_balance": r"(?i)Principal\s*Balance\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "remaining_term": r"(?i)Remaining\s*Term\s*:\s*(\d+\s*(?:years?|months?))",
+    "interest_payment": r"(?i)Interest\s*Payment\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "principal_payment": r"(?i)Principal\s*Payment\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "balloon_payment": r"(?i)Balloon\s*Payment\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "late_fee": r"(?i)Late\s*Fee\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "prepayment_terms": r"(?i)Prepayment\s*Terms\s*:\s*(.+)"
 }
+
 
 def extract_fields(text, required_fields):
     extracted = {}
@@ -323,5 +393,84 @@ def extract_fields(text, required_fields):
             if match:
                 extracted[field] = match.group(0)
     return extracted
+
+@app.get("/addRequestType")
+async def add_new_request(request: Request):
+    return templates.TemplateResponse("add_new_request.html", {"request": request})
+
+@app.get("/viewRequestTypes")
+async def view_request(request: Request):
+    return templates.TemplateResponse("view_request_types.html", {"request": request,
+                                                                  "request_types": session_data["requests"]})
+# Define request body model
+# In-memory session storage
+session_data = {"requests": []}  # Stores Request and SubRequests
+@app.post("/save")
+async def handle_form(
+    requestType: str = Form(...),  # Form data for `requestType` (required)
+    subRequestType: str = Form(None)  # Form data for `subRequestType` (optional)
+):
+    # Check if request type exists
+    for req in session_data["requests"]:
+        if req["requestType"] == requestType:
+            req["subRequestType"].append(subRequestType)
+            break
+    else:
+        # If request_type doesn't exist, add it
+        session_data["requests"].append({
+            "requestType": requestType,
+            "subRequestType": [subRequestType]
+        })
+    return JSONResponse(content={"message": f"Request '{requestType}' with subrequest '{subRequestType}' saved successfully"})
+
+# Define dates (X-axis)
+dates = ["2025-03-23", "2025-03-24", "2025-03-25", "2025-03-26"]
+
+# Define labels/categories (Y-axis)
+categories = [
+    "Adjustment",
+    "Money Movement Inbound",
+    "Funding Request",
+    "Loan Modification",
+    "Closing Notice",
+    "Fee Payment",
+    "Money Movement - Outbound",
+    "AU Transfer"
+]
+@app.get("/dashboardChart")
+def generate_chart():
+    # Create a 2D NumPy array (Random sample values)
+    data = np.random.randint(1, 100, size=(len(categories), len(dates)))
+
+    # Convert to a Pandas DataFrame
+    df = pd.DataFrame(data, index=categories, columns=dates)
+
+    # Create the plot
+    fig, ax = plt.subplots(figsize=(16, 9))  # Maximize figure size
+    df.T.plot(kind="bar", ax=ax, width=0.8)
+
+    # Formatting
+    ax.set_xlabel("Date", fontsize=14, labelpad=10)
+    ax.set_ylabel("Requests per day", fontsize=14, labelpad=10)
+    ax.set_title("Category-wise Request Distribution Over Time", fontsize=16, pad=20)
+
+    # Rotate and align X-axis labels
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=60, ha="right", fontsize=12)
+
+    # Move legend outside
+    ax.legend(title="Categories", bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=12)
+
+    # Apply tight layout to ensure visibility
+    plt.tight_layout()
+
+    # Save plot to a bytes buffer with additional padding
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png", bbox_inches="tight", pad_inches=0.2)
+    buf.seek(0)
+    plt.close()
+
+    # Return image as response
+    return StreamingResponse(buf, media_type="image/png", headers={"Cache-Control": "no-cache"})
+
 
 

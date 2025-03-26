@@ -5,215 +5,21 @@
     <title>Email Classifier</title>
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     -->
-    <link rel="stylesheet" href="/static/style.css">
-    <style>
-         body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      min-height: 100vh;
-      background: linear-gradient(to top right, #D20A11, #B00000);
+    <link rel="stylesheet" href="../static/styles.css">
 
-      color: white;
-    }
-
-    .container {
-      background: white;
-      color: #333;
-      border-radius: 10px;
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-      width: 85%;
-      padding: 20px;
-      text-align: center;
-         max-width: 1200px;  /* Set a max width */
-    margin: 30px auto;
-    }
-
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      color: black;
-    }
-
-    .upload-row {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      margin: 15px 0;
-        padding-left: 20px;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    label {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    label:hover {
-      background-color: #45a049;
-    }
-
-    p.file-name {
-      margin-left: 20px;
-      font-style: italic;
-      color: #333;
-    }
-
-    button {
-      margin-top: 20px;
-      background-color: #007bff;
-      color: white;
-      padding: 12px 25px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .results {
-      margin-top: 20px;
-      padding: 15px;
-      background: lightgoldenrodyellow;
-      border-radius: 8px;
-      text-align: left;
-    }
-
-    .results h3 {
-      color: #444;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
-      padding: 5px;
-      font-size: 16px;
-    }
-    .tabs {
-    display: flex;
-    background-color: #f5f0eb; /* Light beige background */
-    padding: 10px;
-    border-radius: 10px;
-    width: 70%;
-}
-
-.tab {
-     flex: 1;
-    background: none;
-    border: none;
-    padding: 12px 16px;
-    font-size: 20px;
-    font-weight: normal;
-    color: #3d2c1e; /* Dark brown text */
-    cursor: pointer;
-}
-
-.tab.active {
-    background: white;
-    font-weight: bold;
-    border-radius: 8px;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-    text-decoration: underline;
-}
-
-    .tab:hover {
-     background-color: #e0e0e0;
-         text-decoration: underline;
-    }
-
-
-
-    .content {
-      display: none;
-      background: white;
-      color: #333; /* Dark text color */
-      border: 1px solid #ccc;
-      border-radius: 0 0 5px 5px; /* Rounded corners for content */
-      padding: 20px;
-      width: 70%;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .content.active {
-      display: block;
-    }
-    .results-table {
-  width: 50%;
-  border-collapse: collapse;
-  color: black;
-  margin: auto;
-}
-
-.results-table th {
-  text-align: left;
-  padding: 8px;
-  background-color:  red;
-}
-
-.results-table td {
-  text-align: left;
-  padding: 8px;
-  border: 1px solid #ddd;
-}
-.button-container {
-  display: flex;
-  justify-content: center; /* Center align the button */
-  margin-top: 20px;
-
-}
-.button-class {
-  padding: 12px 25px;
-  font-size: 16px;
-  font-family: Arial, sans-serif;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-  background-color: red; /* Sets the button color to red */
-  color: white; /* White text for contrast */
-  text-decoration: none;
-}
-.button-class:hover {
-  background-color: #a00;
-    text-decoration: underline; /* Darker red on hover */
-}
-
-
-    </style>
 </head>
 
 <body>
 
   <div class="tabs">
-    <div class="tab active" data-tab="emailTab">Email Classification</div>
+    <div class="tab active" data-tab="emailTab">Email Gate Keeper</div>
     <div class="tab" data-tab="dashboardTab">Dashboard</div>
   </div>
 
   <div class="content active" id="emailTab">
     <h1>Email Gate Keeper</h1>
     <form id="uploadForm">
-        <p align="left"><b>Upload a file for email classification</b></p>
+        <p align="left"><b>Upload email/pdf/img file for classification</b></p>
       <div class="upload-row">
         <input type="file" name="email_file" id="email_file" required>
         <label class="button-class" for="email_file">Upload File</label>
@@ -230,9 +36,21 @@
   </div>
 
   <div class="content" id="dashboardTab">
-    <h2>Dashboard</h2>
-    <p>View the results and detailed statistics of your email classifications here.</p>
+      <form id="dashboardForm">
+        <!-- Left Sidebar -->
+        <div class="dashnavbar">
+            <span class="link" onclick="loadPage('addRequestType',this)">Add Request Type</span>
+            <span class="link" onclick="loadPage('viewRequestTypes',this)">View Request Types</span>
+            <span class="link" onclick="loadPage('dashboardChart',this)">Metrics</span>
+        </div>
+
+
+
+    <!-- Right Content Area -->
+    <div id="content-area"></div>
+      </form>
   </div>
+
 
   <script>
 
@@ -355,7 +173,7 @@ function applyTabState() {
              <h3><p><strong>Primary Intent:</strong> ${data.primary}</p></h3>
              <h3><p><strong>Duplicate Email:</strong> ${data.duplicate}</p></h3>
              <h3><p><strong>Is Phishing Email:</strong> ${data.phishingEmail}</p></h3>
-
+             <h3><p><strong>Reasoning:</strong> ${data.reasoning}</p></h3>
           `;
            console.log("Active Tab after Submit:", activeTab);
            // Ensure active tab is reapplied after AJAX call
@@ -371,6 +189,74 @@ function applyTabState() {
           resultsDiv.innerHTML = `<p style="color: red;">An error occurred while processing the file.</p>`;
         });
     });
+function loadPage(pageName, element) {
+    // Remove 'active' class from all links
+    document.querySelectorAll('.link').forEach(link => link.classList.remove('active'));
+
+    // Add 'active' class to the clicked link
+    if (element) {
+        element.classList.add('active');
+    }
+    if (pageName === 'dashboardChart') {
+        // Fetch data for the dashboard chart
+        fetch('/dashboardChart')
+            .then(response => response.blob()) // Convert response to blob
+            .then(blob => {
+                const imageUrl = URL.createObjectURL(blob); // Create URL for image
+                document.getElementById('content-area').innerHTML =
+                    `<img src="${imageUrl}" alt="Fetched Image" style="max-width:80%; height:auto; display:block; margin:auto;"/>`;
+            })
+            .catch(error => console.error('Error fetching image:', error));
+    } else {
+        // Fetch the requested page content
+        fetch(`/${pageName}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(template => {
+                document.getElementById('content-area').innerHTML = template;
+            })
+            .catch(error => {
+                console.error('Error fetching content:', error);
+                document.getElementById('content-area').innerHTML = `<p>Error loading content. Please try again.</p>`;
+            });
+    }
+}
+
+
+
+document.getElementById('dashboardForm').addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+
+
+                    // Create FormData object
+                    const formData = new FormData(this);
+
+                    fetch('/save', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Response received");
+                        console.log(data.message);
+                         // Clear the form fields
+                        this.reset();
+                        document.getElementById('content-area').innerHTML = `
+                        <h2>Request Submitted Successfully</h2>
+                        <p>${data.message}</p>`;
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        document.getElementById('resultMessage').innerHTML =
+                            `<p style="color: red;">An error occurred while processing your request.</p>`;
+                        document.getElementById('resultSection').style.display = 'block';
+                    });
+                });
+
 
   </script>
 

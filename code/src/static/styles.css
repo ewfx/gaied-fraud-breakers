@@ -1,0 +1,238 @@
+body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      background: linear-gradient(to top right, #D20A11, #B00000);
+
+      color: white;
+    }
+
+    .container {
+      background: white;
+      color: #333;
+      border-radius: 10px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      width: 95%;
+      padding: 20px;
+      text-align: center;
+         max-width: 1200px;  /* Set a max width */
+    margin: 30px auto;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: black;
+    }
+
+    .upload-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 15px 0;
+        padding-left: 20px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    label {
+      padding: 10px 20px;
+      font-size: 16px;
+
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+
+
+    p.file-name {
+      margin-left: 20px;
+      font-style: italic;
+      color: #333;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .results {
+      margin-top: 20px;
+      padding: 15px;
+      background: lightgoldenrodyellow;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .results h3 {
+      color: #444;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      padding: 5px;
+      font-size: 16px;
+    }
+    .tabs {
+    display: flex;
+    background-color: #f5f0eb; /* Light beige background */
+    padding: 10px;
+    border-radius: 10px;
+    width: 70%;
+}
+
+.tab {
+     flex: 1;
+    background: none;
+    border: none;
+    padding: 12px 16px;
+    font-size: 20px;
+    font-weight: normal;
+    color: #3d2c1e; /* Dark brown text */
+    cursor: pointer;
+}
+
+.tab.active {
+    background: white;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    text-decoration: underline;
+}
+
+    .tab:hover {
+     background-color: #e0e0e0;
+         text-decoration: underline;
+    }
+
+
+
+    .content {
+      display: none;
+      background: white;
+      color: #333; /* Dark text color */
+      border: 1px solid #ccc;
+      border-radius: 0 0 5px 5px; /* Rounded corners for content */
+      padding: 20px;
+      width: 70%;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .content.active {
+      display: block;
+    }
+    .results-table {
+  width: 80%;
+  border-collapse: collapse;
+  color: black;
+  margin: auto;
+}
+
+.results-table th {
+  text-align: left;
+  padding: 8px;
+  background-color:  red;
+}
+
+.results-table td {
+  text-align: left;
+  padding: 8px;
+   border: 1px solid black;
+}
+ .sub-requests {
+            border-top: 1px solid black; /* Adds line between multiple sub-requests */
+        }
+.button-container {
+  display: flex;
+  justify-content: center; /* Center align the button */
+  margin-top: 20px;
+
+}
+.button-class {
+  padding: 12px 25px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  background-color: red; /* Sets the button color to red */
+  color: white; /* White text for contrast */
+  text-decoration: none;
+}
+.button-class:hover {
+  background-color: #a00;
+    text-decoration: underline; /* Darker red on hover */
+}
+.content-area {border: 1px solid #000;min-height: 300px;padding: 10px;}
+ .dashnavbar {
+    background-color: #f0f0f0; /* Light background for the navbar */
+    padding: 10px; /* Add some padding for spacing */
+    text-align: center; /* Center-align the links */
+    border-bottom: 1px solid #ccc; /* Optional: Add a bottom border for separation */
+}
+
+.dashnavbar .link {
+    margin: 0 15px; /* Add spacing between links */
+    cursor: pointer; /* Change cursor to pointer */
+    color: #333; /* Text color for links */
+    font-size: 16px; /* Adjust font size */
+    text-decoration: none; /* Remove underline from links */
+}
+
+.dashnavbar .link:hover {
+    color: #007BFF; /* Optional: Change color on hover for interactivity */
+}
+.link.active {
+    text-decoration: underline;
+    font-weight: bold;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Keeps form centered */
+}
+
+.form-group {
+    display: flex;
+    align-items: center; /* Align input fields with labels */
+    justify-content: flex-start; /* Left-align labels */
+    width: 400px; /* Adjust width as needed */
+    margin-bottom: 10px;
+
+}
+
+.form-group label {
+    width: 150px; /* Set a fixed width for labels */
+    text-align: left; /* Left-align text */
+     white-space: nowrap;
+}
+.form-group input {
+    flex: 1; /* Make input fields align properly */
+    padding: 5px;
+}
