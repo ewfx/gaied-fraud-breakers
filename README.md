@@ -14,47 +14,62 @@
 ---
 
 ## 🎯 Introduction
-A brief overview of your project and its purpose. Mention which problem statement are your attempting to solve. Keep it concise and engaging.
+Gen AI-powered solution to extract, interpret, and classify loan servicing emails with contextual understanding, sub-category identification, and explainable reasoning.
 
 ## 🎥 Demo
-🔗 [Live Demo](#) (if applicable)  
-📹 [Video Demo](#) (if applicable)  
-🖼️ Screenshots:
+📹 [Video Demo](#) attached in location [https://github.com/ewfx/gaied-fraud-breakers/tree/main/artifacts/demo](https://github.com/ewfx/gaied-fraud-breakers/blob/main/artifacts/demo/Demo.zip)
+
+🖼️ Screenshots: Yes available in attached ppt in [https://github.com/ewfx/gaied-fraud-breakers/tree/main/artifacts/](https://github.com/ewfx/gaied-fraud-breakers/blob/main/artifacts/Email_Gatekeeper.pptx)
 
 ![Screenshot 1](link-to-image)
 
 ## 💡 Inspiration
-What inspired you to create this project? Describe the problem you're solving.
+The need to enhance efficiency in loan servicing workflows by automating email classification, reducing manual effort, improving accuracy in request handling, and ensuring timely responses inspired the problem-solving initiative. Traditional keyword-based systems struggle with context, intent recognition, and sub-category identification, making AI-powered solutions essential for better decision-making and transparency.
 
 ## ⚙️ What It Does
-Explain the key features and functionalities of your project.
+Intelligent email classification system using LLM
+Context-based Data Extraction
+Multi-Request Handling with Intent Detection
+Priority-based Extraction
+Duplicate Email Detection
+Modular architecture for easy maintenance and scalability
+![image](https://github.com/user-attachments/assets/cf091778-5515-40c4-8094-d03346b24aa2)
+
 
 ## 🛠️ How We Built It
-Briefly outline the technologies, frameworks, and tools used in development.
+Email or document extraction and parsing tokens
+Earlier tried with Zero Shot Classification LLM, but rsults are not impressive, so used Sliding Window Attention LLM
+
 
 ## 🚧 Challenges We Faced
-Describe the major technical or non-technical challenges your team encountered.
+Identifying right and free LLM is difficult, unavailable of GPU in our personal machines, customizing and fine tuning the LLMs are major challenges. 
 
 ## 🏃 How to Run
 1. Clone the repository  
    ```sh
-   git clone https://github.com/your-repo.git
+   git clone [https://github.com/your-repo.git](https://github.com/ewfx/gaied-fraud-breakers/tree/main/code/src)
    ```
+   Take src folder, create python project and place src the project
 2. Install dependencies  
    ```sh
-   npm install  # or pip install -r requirements.txt (for Python)
+   or pip install -r requirements.txt (for Python), requirements.txt is available in [https://github.com/ewfx/gaied-fraud-breakers/tree/main](https://github.com/ewfx/gaied-fraud-breakers/blob/main/requirements.txt)
    ```
 3. Run the project  
    ```sh
-   npm start  # or python app.py
+   use python uvicorn command
    ```
+4. Create Access Token from Hugging Face and update in main.py
 
 ## 🏗️ Tech Stack
-- 🔹 Frontend: React / Vue / Angular
-- 🔹 Backend: Node.js / FastAPI / Django
-- 🔹 Database: PostgreSQL / Firebase
-- 🔹 Other: OpenAI API / Twilio / Stripe
+- 🔹 Frontend: HTML, Javascript, CSS, Ajax
+- 🔹 Backend: Python, FastAPI, email, pytesseract, pdfplumber, Pillow, transformers, scikit-learn, uvicorn, jinja2, torch, python-multipart, pandas
 
-## 👥 Team
-- **Your Name** - [GitHub](#) | [LinkedIn](#)
-- **Teammate 2** - [GitHub](#) | [LinkedIn](#)
+
+## 👥 Team: **Fraud Breakers**
+**Team Members**:
+Vivek K Tripathi (Manager)
+Vijaya Nagaraj SN(Architect)
+Sree Deepthi Chintala (Development Lead)
+Raghunatha R Devireddy (Development Lead)
+Amit Agrawal (Quality & Service Virtualization Lead)
+
