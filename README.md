@@ -32,6 +32,7 @@ Multi-Request Handling with Intent Detection
 Priority-based Extraction
 Duplicate Email Detection
 Modular architecture for easy maintenance and scalability
+Refer Architecture Diagrams in [artifacts/arch](https://github.com/ewfx/gaied-fraud-breakers/blob/main/artifacts/arch/HAckathon_Proposed_Architecture.jpg)
 
 ## 🛠️ How We Built It
 Email or document extraction and parsing tokens
