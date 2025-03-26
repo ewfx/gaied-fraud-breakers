@@ -156,7 +156,6 @@ field_names = [
 processed_emails = set()
 # Initialize Hugging Face inference client
 client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="")
-#client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="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")
 
 
 
