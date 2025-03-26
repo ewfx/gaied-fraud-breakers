@@ -17,7 +17,7 @@
 Gen AI-powered solution to extract, interpret, and classify loan servicing emails with contextual understanding, sub-category identification, and explainable reasoning.
 
 ## 🎥 Demo
-📹 Video Demo: attached in location [https://github.com/ewfx/gaied-fraud-breakers/tree/main/artifacts/demo](https://github.com/ewfx/gaied-fraud-breakers/blob/main/artifacts/demo/Demo.zip)
+📹 Video Demo: available in compressed file attached in location [https://github.com/ewfx/gaied-fraud-breakers/tree/main/artifacts/demo](https://github.com/ewfx/gaied-fraud-breakers/blob/main/artifacts/demo/Demo.zip)
 
 🖼️ Screenshots: Yes available in attached ppt in [https://github.com/ewfx/gaied-fraud-breakers/tree/main/artifacts/](https://github.com/ewfx/gaied-fraud-breakers/blob/main/artifacts/Email_Gatekeeper.pptx)
 
