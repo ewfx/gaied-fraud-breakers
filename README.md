@@ -64,8 +64,12 @@ Identifying right and free LLM is difficult, unavailable of GPU in our personal 
 ## 👥 Team: **Fraud Breakers**
 **Team Members**:
       Vivek K Tripathi (Manager)
+      
       Vijaya Nagaraj SN(Architect)
+      
       Sree Deepthi Chintala (Development Lead)
+      
       Raghunatha R Devireddy (Development Lead)
+      
       Amit Agrawal (Quality & Service Virtualization Lead)
 
