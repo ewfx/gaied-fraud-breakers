@@ -1,5 +1,8 @@
-Replace this file with files that you would like to use for your demo. This may include
+**Architecture:**
 
-- A presentation/deck in pdf or pptx format
-- A demo video (screen capture) in mp4 or other popular video formats
-- Any other document describing your solution (in pdf or md format)
+**Current Architecture:**
+![HAckathon_Current_Architecture](https://github.com/user-attachments/assets/5f12eae3-816f-45da-ad40-25fdaa5379ec)
+
+Proposed Architecture**:**
+![HAckathon_Proposed_Architecture](https://github.com/user-attachments/assets/94ce9237-db9e-4093-b772-c3dd242dc540)
+
