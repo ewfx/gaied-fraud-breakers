@@ -1,3 +1,9 @@
-Replace this file with a document that describes the architecture and design of your solution architecture. This may include
-    - An architecture drawing exported into a png/jpeg format image
-    - A document in pdf or md format that describes your solution
+**Architecture:**
+
+**Current Architecture:**
+
+![HAckathon_Current_Architecture](https://github.com/user-attachments/assets/5f12eae3-816f-45da-ad40-25fdaa5379ec)
+
+**Proposed Architecture:**
+
+![HAckathon_Proposed_Architecture](https://github.com/user-attachments/assets/94ce9237-db9e-4093-b772-c3dd242dc540)
