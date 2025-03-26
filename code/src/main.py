@@ -150,12 +150,67 @@ field_names = [
     "amortization_period",
     "escrow_requirements",
     "prepayment_penalty",
-    "loan_status"
+    "loan_status",
+    "loan_number",
+    "origination_date",
+    "repayment_type",
+    "disbursement_date",
+    "funding_source",
+    "dscr",
+    "ltv",
+    "debt_yield",
+    "principal_balance",
+    "remaining_term",
+    "interest_payment",
+    "principal_payment",
+    "balloon_payment",
+    "late_fee",
+    "prepayment_terms"
 ]
+
+field_patterns = {
+    "deal_name": r"(?i)Deal\s*Name\s*:\s*(.+)",
+    "monetary_amount": r"(?i)\$\s?[\d,]+(?:\.\d{2})?",
+    "expiration_date": r"(?i)\b(?:\d{1,2}/\d{1,2}/\d{2,4})\b",
+    "borrower_name": r"(?i)Borrower\s*Name\s*:\s*(.+)",
+    "loan_amount": r"(?i)Loan\s*Amount\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "interest_rate": r"(?i)Interest\s*Rate\s*:\s*(\d+\.?\d*)\%",
+    "loan_term": r"(?i)Loan\s*Term\s*:\s*(\d+\s*(?:years?|months?))",
+    "maturity_date": r"(?i)Maturity\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
+    "collateral": r"(?i)Collateral\s*:\s*(.+)",
+    "lender_name": r"(?i)Lender\s*Name\s*:\s*(.+)",
+    "loan_type": r"(?i)Loan\s*Type\s*:\s*(.+)",
+    "closing_date": r"(?i)Closing\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
+    "payment_schedule": r"(?i)Payment\s*Schedule\s*:\s*(.+)",
+    "guarantor": r"(?i)Guarantor\s*:\s*(.+)",
+    "loan_purpose": r"(?i)Loan\s*Purpose\s*:\s*(.+)",
+    "fees": r"(?i)Fees\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "covenants": r"(?i)Covenants\s*:\s*(.+)",
+    "amortization_period": r"(?i)Amortization\s*Period\s*:\s*(\d+\s*(?:years?|months?))",
+    "escrow_requirements": r"(?i)Escrow\s*Requirements\s*:\s*(.+)",
+    "prepayment_penalty": r"(?i)Prepayment\s*Penalty\s*:\s*(.+)",
+    "loan_status": r"(?i)Loan\s*Status\s*:\s*(.+)",
+    "loan_number": r"(?i)\*\*Loan\s*Number\*\*\s*:\s*(\w+)",  # Alphanumeric loan number with bold also
+    "origination_date": r"(?i)Origination\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
+    "repayment_type": r"(?i)Repayment\s*Type\s*:\s*(.+)",  # Fixed, variable, interest-only, etc.
+    "disbursement_date": r"(?i)Disbursement\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
+    "funding_source": r"(?i)Funding\s*Source\s*:\s*(.+)",  # Bank, private lender, etc.
+    "dscr": r"(?i)DSCR\s*\(Debt Service Coverage Ratio\)\s*:\s*(\d+\.?\d*)",
+    "ltv": r"(?i)LTV\s*\(Loan-to-Value\)\s*:\s*(\d+\.?\d*)\%",
+    "debt_yield": r"(?i)Debt\s*Yield\s*:\s*(\d+\.?\d*)\%",
+    "principal_balance": r"(?i)Principal\s*Balance\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "remaining_term": r"(?i)Remaining\s*Term\s*:\s*(\d+\s*(?:years?|months?))",
+    "interest_payment": r"(?i)Interest\s*Payment\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "principal_payment": r"(?i)Principal\s*Payment\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "balloon_payment": r"(?i)Balloon\s*Payment\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "late_fee": r"(?i)Late\s*Fee\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
+    "prepayment_terms": r"(?i)Prepayment\s*Terms\s*:\s*(.+)"
+}
 
 processed_emails = set()
 # Initialize Hugging Face inference client
 client = InferenceClient(model="mistralai/Mistral-7B-Instruct-v0.1",token="")
+
 
 
 
@@ -224,12 +279,14 @@ def classify_email_with_llama(email_body: str):
         multiple_requests = "false"
 
     intent = first_json["intent"]
+    fields = extract_fields(email_body, field_names)
+    print("fields ------ ", fields)
     responseContent = {
         # "request": request,
         "requestType": first_json["Category"],
         "subRequestType": first_json["Sub-Category"],
         "score": round(first_json["Confidence-score"], 2),
-        "fields": {},
+        "fields": fields,
         "requests": [],
         "multipleRequests": multiple_requests,
         "primary": intent,
@@ -352,44 +409,7 @@ def extract_text_from_image(content):
 #     "expiration_date": r"\b(?:\d{1,2}/\d{1,2}/\d{2,4})\b"
 # }
 
-field_patterns = {
-    "deal_name": r"(?i)Deal\s*Name\s*:\s*(.+)",
-    "monetary_amount": r"(?i)\$\s?[\d,]+(?:\.\d{2})?",
-    "expiration_date": r"(?i)\b(?:\d{1,2}/\d{1,2}/\d{2,4})\b",
-    "borrower_name": r"(?i)Borrower\s*Name\s*:\s*(.+)",
-    "loan_amount": r"(?i)Loan\s*Amount\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
-    "interest_rate": r"(?i)Interest\s*Rate\s*:\s*(\d+\.?\d*)\%",
-    "loan_term": r"(?i)Loan\s*Term\s*:\s*(\d+\s*(?:years?|months?))",
-    "maturity_date": r"(?i)Maturity\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
-    "collateral": r"(?i)Collateral\s*:\s*(.+)",
-    "lender_name": r"(?i)Lender\s*Name\s*:\s*(.+)",
-    "loan_type": r"(?i)Loan\s*Type\s*:\s*(.+)",
-    "closing_date": r"(?i)Closing\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
-    "payment_schedule": r"(?i)Payment\s*Schedule\s*:\s*(.+)",
-    "guarantor": r"(?i)Guarantor\s*:\s*(.+)",
-    "loan_purpose": r"(?i)Loan\s*Purpose\s*:\s*(.+)",
-    "fees": r"(?i)Fees\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
-    "covenants": r"(?i)Covenants\s*:\s*(.+)",
-    "amortization_period": r"(?i)Amortization\s*Period\s*:\s*(\d+\s*(?:years?|months?))",
-    "escrow_requirements": r"(?i)Escrow\s*Requirements\s*:\s*(.+)",
-    "prepayment_penalty": r"(?i)Prepayment\s*Penalty\s*:\s*(.+)",
-    "loan_status": r"(?i)Loan\s*Status\s*:\s*(.+)",
-    "loan_number": r"(?i)Loan\s*Number\s*:\s*(\w+)",  # Alphanumeric loan number
-    "origination_date": r"(?i)Origination\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
-    "repayment_type": r"(?i)Repayment\s*Type\s*:\s*(.+)",  # Fixed, variable, interest-only, etc.
-    "disbursement_date": r"(?i)Disbursement\s*Date\s*:\s*(\d{1,2}/\d{1,2}/\d{2,4})",
-    "funding_source": r"(?i)Funding\s*Source\s*:\s*(.+)",  # Bank, private lender, etc.
-    "dscr": r"(?i)DSCR\s*\(Debt Service Coverage Ratio\)\s*:\s*(\d+\.?\d*)",
-    "ltv": r"(?i)LTV\s*\(Loan-to-Value\)\s*:\s*(\d+\.?\d*)\%",
-    "debt_yield": r"(?i)Debt\s*Yield\s*:\s*(\d+\.?\d*)\%",
-    "principal_balance": r"(?i)Principal\s*Balance\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
-    "remaining_term": r"(?i)Remaining\s*Term\s*:\s*(\d+\s*(?:years?|months?))",
-    "interest_payment": r"(?i)Interest\s*Payment\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
-    "principal_payment": r"(?i)Principal\s*Payment\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
-    "balloon_payment": r"(?i)Balloon\s*Payment\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
-    "late_fee": r"(?i)Late\s*Fee\s*:\s*\$\s?[\d,]+(?:\.\d{2})?",
-    "prepayment_terms": r"(?i)Prepayment\s*Terms\s*:\s*(.+)"
-}
+
 
 
 def extract_fields(text, required_fields):
